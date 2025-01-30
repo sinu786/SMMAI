@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from models.post import Post
 
 app = FastAPI()
 
@@ -15,3 +16,16 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Social AI Scheduler API"}
+
+from services.ai import generate_post
+
+@app.post("/generate")
+async def generate(prompt: str):
+    return {"content": generate_post(prompt)}
+
+from models.post import Post
+
+@app.post("/schedule")
+async def schedule_post(content: str, scheduled_at: str):
+    # Save to database
+    return {"status": "scheduled"}
